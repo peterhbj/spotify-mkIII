@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Análise de Sistemas de Informação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0d0d0d;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #0f0f0f;
+            --green-primary: #1DB954;
+            --green-secondary: #1ed760;
+            --shadow-dark: #080808;
+            --shadow-light: #1e1e1e;
+            --glow-subtle: rgba(29, 185, 84, 0.1);
+            --glow-medium: rgba(29, 185, 84, 0.2);
+            --glow-strong: rgba(29, 185, 84, 0.4);
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+        .spotify-green {
+            background-color: #1DB954;
+        }
+        .spotify-black {
+            background-color: #191414;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes iconPulse {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes particleFade {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.5);
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            will-change: transform, box-shadow;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light), 0 8px 30px var(--glow-medium);
+            border: 1px solid var(--glow-strong);
+        }
+        .tech-icon {
+            transition: all 0.3s;
+        }
+        .tech-icon:hover {
+            transform: scale(1.1);
+            color: #1DB954;
+        }
+
+        .navbar-glass {
+            background: rgba(17, 17, 17, 0.7) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(29, 185, 84, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @supports not (backdrop-filter: blur(10px)) {
+            .navbar-glass {
+                background: rgba(17, 17, 17, 0.95) !important;
+            }
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-secondary) 100%);
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+            border: none;
+            transition: all 0.3s ease;
+            will-change: transform;
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 185, 84, 0.5);
+        }
+        .btn-modern:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(29, 185, 84, 0.4);
+        }
+
+        .badge-modern {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+            box-shadow: 4px 4px 8px #0a0a0a, -4px -4px 8px #1a1a1a;
+            border: 1px solid var(--glow-medium);
+            transition: transform 0.2s ease;
+        }
+        .badge-modern:hover {
+            transform: scale(1.05);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+        }
+
+        /* Animation Utility Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+        .animate-slide-left {
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-slide-right {
+            animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-slide-up {
+            animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-scale-in {
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .animate-icon-pulse {
+            animation: iconPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Stagger Delay Utilities */
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+        .delay-500 {
+            animation-delay: 0.5s;
+        }
+
+        /* Initial state for scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+        }
+
+        /* Responsive Adjustments for Mobile */
+        @media (max-width: 768px) {
+            @keyframes slideInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .card-hover:hover {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* Accessibility - Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .card-hover:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header/Navigation -->
+    <nav class="navbar-glass fixed top-0 w-full z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fab fa-spotify text-green-500 text-3xl"></i>
+                    <span class="text-xl font-bold">Spotify - Análise SI</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="hover:text-green-500 transition">Início</a>
+                    <a href="#descricao" class="hover:text-green-500 transition">1. Descrição</a>
+                    <a href="#fornecedores" class="hover:text-green-500 transition">2. Fornecedores/Clientes</a>
+                    <a href="#canais" class="hover:text-green-500 transition">3. Canais</a>
+                    <a href="#sistemas" class="hover:text-green-500 transition">4. Sistemas</a>
+                    <a href="#usuarios" class="hover:text-green-500 transition">5. Usuários</a>
+                    <a href="#tech" class="hover:text-green-500 transition">Tecnologia</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-95 z-40 hidden">
+        <div class="flex flex-col items-center justify-center h-full space-y-8 text-2xl">
+            <a href="#home" class="hover:text-green-500 transition mobile-link">Início</a>
+            <a href="#descricao" class="hover:text-green-500 transition mobile-link">1. Descrição</a>
+            <a href="#fornecedores" class="hover:text-green-500 transition mobile-link">2. Fornecedores/Clientes</a>
+            <a href="#canais" class="hover:text-green-500 transition mobile-link">3. Canais</a>
+            <a href="#sistemas" class="hover:text-green-500 transition mobile-link">4. Sistemas</a>
+            <a href="#usuarios" class="hover:text-green-500 transition mobile-link">5. Usuários</a>
+            <a href="#tech" class="hover:text-green-500 transition mobile-link">Tecnologia</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div class="container mx-auto text-center fade-in">
+            <i class="fab fa-spotify text-green-500 text-8xl mb-8 animate-scale-in"></i>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-slide-up delay-100">
+                <span class="gradient-text">Spotify</span>
+            </h1>
+            <h2 class="text-3xl md:text-4xl mb-6">
+                Análise de Sistemas de Informação
+            </h2>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                Estudo completo sobre o modelo de negócios, sistemas de informação e arquitetura tecnológica do maior serviço de streaming de música do mundo
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center mb-12">
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-200">
+                    <i class="fas fa-users text-green-500 mr-2"></i>
+                    <span class="counter-number" data-count-to="640" data-count-suffix="M+">640M+</span> usuários
+                </div>
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-300">
+                    <i class="fas fa-music text-green-500 mr-2"></i>
+                    <span class="counter-number" data-count-to="100" data-count-suffix="M+">100M+</span> músicas
+                </div>
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-400">
+                    <i class="fas fa-globe text-green-500 mr-2"></i>
+                    <span class="counter-number" data-count-to="184" data-count-suffix="">184</span> países
+                </div>
+            </div>
+            <a href="#descricao" class="btn-modern inline-block text-black px-8 py-4 rounded-full font-bold animate-slide-up delay-500">
+                Iniciar Análise <i class="fas fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 1. DESCRIÇÃO DO NEGÓCIO -->
+    <section id="descricao" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">1</span>
+                Descrição do Negócio
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="card-hover bg-gray-800 p-8 rounded-xl mb-8 animate-on-scroll">
+                    <h3 class="text-2xl font-bold mb-6 text-green-500">
+                        <i class="fas fa-building mr-2 tech-icon animate-on-scroll"></i>
+                        O Que é o Spotify?
+                    </h3>
+                    <p class="text-lg text-gray-300 mb-6">
+                        O Spotify é uma empresa de tecnologia e entretenimento fundada em 2006 na Suécia, que opera como o maior serviço de streaming de áudio do mundo. 
+                        A empresa revolucionou a indústria musical ao criar uma plataforma que conecta artistas e ouvintes através de tecnologia avançada.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-700 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-3">
+                                <i class="fas fa-bullseye mr-2"></i>
+                                Missão
+                            </h4>
+                            <p class="text-gray-300">
+                                "Desbloquear o potencial da criatividade humana, dando a milhões de artistas criativos a oportunidade de viver de sua arte e bilhões de fãs a oportunidade de desfrutar e se inspirar nela."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-3">
+                                <i class="fas fa-eye mr-2"></i>
+                                Visão
+                            </h4>
+                            <p class="text-gray-300">
+                                Ser a plataforma de áudio número um do mundo, conectando criadores e consumidores através de experiências personalizadas e inovadoras.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Business -->
+                <div class="card-hover bg-gray-800 p-8 rounded-xl animate-on-scroll">
+                    <h3 class="text-2xl font-bold mb-6 text-green-500">
+                        <i class="fas fa-cogs mr-2 tech-icon animate-on-scroll"></i>
+                        Modelo de Negócio Principal
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gray-700 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-3">Streaming de Áudio sob Demanda</h4>
+                            <ul class="space-y-2 text-gray-300">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Acesso instantâneo a mais de 100 milhões de músicas</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>6 milhões de podcasts e programas de áudio</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Audiolivros e conteúdo educacional</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Playlists personalizadas através de IA</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-gray-700 p-4 rounded-lg text-center">
+                                <div class="text-3xl font-bold text-green-500 mb-2">Freemium</div>
+                                <p class="text-gray-400">Modelo de monetização híbrido</p>
+                            </div>
+                            <div class="bg-gray-700 p-4 rounded-lg text-center">
+                                <div class="text-3xl font-bold text-green-500 mb-2">B2C & B2B</div>
+                                <p class="text-gray-400">Consumidores e empresas</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-700 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-3">Proposta de Valor</h4>
+                            <div class="grid md:grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <i class="fas fa-infinity text-3xl text-green-500 mb-2"></i>
+                                    <p class="text-sm">Acesso ilimitado</p>
+                                </div>
+                                <div>
+                                    <i class="fas fa-robot text-3xl text-green-500 mb-2"></i>
+                                    <p class="text-sm">Personalização por IA</p>
+                                </div>
+                                <div>
+<i class="fas fa-devices text-3xl text-green-500 mb-2"></i>
+                                    <p class="text-sm">Multi-plataforma</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. FORNECEDORES E CLIENTES -->
+    <section id="fornecedores" class="py-20 px-4 bg-gray-800">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">2</span>
+                Fornecedores e Clientes
+            </h2>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Fornecedores -->
+                <div class="bg-gray-900 p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-6 text-green-500">
+                        <i class="fas fa-truck mr-2"></i>
+                        Fornecedores
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-2">
+                                <i class="fas fa-music mr-2"></i>
+                                Conteúdo
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Gravadoras (Universal, Sony, Warner)</li>
+                                <li>• Artistas independentes</li>
+                                <li>• Produtores de podcasts</li>
+                                <li>• Editoras de audiolivros</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-blue-400 mb-2">
+                                <i class="fas fa-server mr-2"></i>
+                                Infraestrutura
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Google Cloud Platform</li>
+                                <li>• CDNs (Fastly, Akamai)</li>
+                                <li>• Provedores de internet</li>
+                                <li>• Data centers</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-purple-400 mb-2">
+                                <i class="fas fa-code mr-2"></i>
+                                Tecnologia
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Fornecedores de software</li>
+                                <li>• Serviços de IA/ML</li>
+                                <li>• Ferramentas de analytics</li>
+                                <li>• Segurança e DRM</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-yellow-400 mb-2">
+                                <i class="fas fa-handshake mr-2"></i>
+                                Serviços
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Processadores de pagamento</li>
+                                <li>• Agências de publicidade</li>
+                                <li>• Consultorias</li>
+                                <li>• Serviços jurídicos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clientes -->
+                <div class="bg-gray-900 p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-6 text-green-500">
+                        <i class="fas fa-users mr-2"></i>
+                        Clientes
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-2">
+                                <i class="fas fa-user mr-2"></i>
+                                Consumidores Finais (B2C)
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Usuários Free (394M)</li>
+                                <li>• Assinantes Premium Individual (246M)</li>
+                                <li>• Assinantes Premium Família</li>
+                                <li>• Assinantes Premium Estudante</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-blue-400 mb-2">
+                                <i class="fas fa-building mr-2"></i>
+                                Empresas (B2B)
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Estabelecimentos comerciais</li>
+                                <li>• Academias e fitness centers</li>
+                                <li>• Restaurantes e cafés</li>
+                                <li>• Hotéis e resorts</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-purple-400 mb-2">
+                                <i class="fas fa-ad mr-2"></i>
+                                Anunciantes
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Grandes marcas globais</li>
+                                <li>• Empresas locais</li>
+                                <li>• Startups e apps</li>
+                                <li>• Indústria do entretenimento</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-bold text-yellow-400 mb-2">
+                                <i class="fas fa-microphone mr-2"></i>
+                                Criadores de Conteúdo
+                            </h4>
+                            <ul class="space-y-1 text-sm text-gray-300">
+                                <li>• Artistas verificados</li>
+                                <li>• Podcasters</li>
+                                <li>• Influenciadores</li>
+                                <li>• Curadores de playlists</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fluxo de Valor -->
+            <div class="mt-8 bg-gray-900 p-8 rounded-xl">
+                <h3 class="text-xl font-bold mb-6 text-green-500 text-center">
+                    <i class="fas fa-exchange-alt mr-2"></i>
+                    Fluxo de Valor
+                </h3>
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
+                        <span class="bg-blue-600 px-4 py-2 rounded-full">Gravadoras</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-purple-600 px-4 py-2 rounded-full">Conteúdo</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-green-600 px-4 py-2 rounded-full font-bold">SPOTIFY</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-yellow-600 px-4 py-2 rounded-full">Streaming</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-red-600 px-4 py-2 rounded-full">Usuários</span>
+                    </div>
+                    <div class="mt-4 text-center text-gray-400 text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        70% da receita retorna aos fornecedores de conteúdo como royalties
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. CANAIS DE DISTRIBUIÇÃO -->
+    <section id="canais" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">3</span>
+                Canais de Distribuição
+            </h2>
+            
+            <div class="max-w-5xl mx-auto">
+                <!-- Tipo de Negócio -->
+                <div class="bg-gray-800 p-8 rounded-xl mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-green-500 text-center">
+                        <i class="fas fa-store mr-2"></i>
+                        Modelo: Plataforma Digital Multiplataforma
+                    </h3>
+                    <p class="text-center text-gray-300 mb-6">
+                        O Spotify opera exclusivamente através de canais digitais, sem presença física tradicional
+                    </p>
+                </div>
+
+                <!-- Canais Principais -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-desktop text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Web Player</h4>
+                        <p class="text-sm text-gray-400">Acesso via navegador sem instalação</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            open.spotify.com
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-mobile-alt text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Mobile Apps</h4>
+                        <p class="text-sm text-gray-400">iOS, Android, Windows Phone</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            75% do uso total
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-laptop text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Desktop Apps</h4>
+                        <p class="text-sm text-gray-400">Windows, macOS, Linux</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            Download direto
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-tv text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Smart TVs</h4>
+                        <p class="text-sm text-gray-400">Samsung, LG, Android TV, Apple TV</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            Apps nativas
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-gamepad text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Consoles</h4>
+                        <p class="text-sm text-gray-400">PlayStation, Xbox</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            Gaming integration
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl text-center card-hover">
+                        <i class="fas fa-car text-4xl text-green-500 mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Automotive</h4>
+                        <p class="text-sm text-gray-400">CarPlay, Android Auto, Tesla</p>
+                        <div class="mt-3 text-xs bg-gray-700 px-3 py-1 rounded-full inline-block">
+                            140+ modelos
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dispositivos Inteligentes -->
+                <div class="bg-gray-800 p-8 rounded-xl mb-8">
+                    <h3 class="text-xl font-bold mb-6 text-green-500">
+                        <i class="fas fa-wifi mr-2"></i>
+                        Ecossistema de Dispositivos Conectados
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-green-400 mb-3">Smart Speakers</h4>
+                            <ul class="space-y-2 text-sm text-gray-300">
+                                <li><i class="fab fa-amazon text-orange-400 mr-2"></i>Amazon Echo/Alexa</li>
+                                <li><i class="fab fa-google text-blue-400 mr-2"></i>Google Home/Assistant</li>
+                                <li><i class="fab fa-apple text-gray-400 mr-2"></i>Apple HomePod/Siri</li>
+                                <li><i class="fas fa-volume-up text-green-400 mr-2"></i>Sonos, Bose, JBL</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-green-400 mb-3">Wearables</h4>
+                            <ul class="space-y-2 text-sm text-gray-300">
+                                <li><i class="fas fa-watch text-gray-400 mr-2"></i>Apple Watch</li>
+                                <li><i class="fas fa-heartbeat text-red-400 mr-2"></i>Fitbit</li>
+                                <li><i class="fas fa-running text-blue-400 mr-2"></i>Garmin</li>
+                                <li><i class="fas fa-clock text-green-400 mr-2"></i>Wear OS devices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spotify Connect -->
+                <div class="bg-gradient-to-r from-green-900 to-green-800 p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-4 text-white">
+                        <i class="fas fa-link mr-2"></i>
+                        Spotify Connect
+                    </h3>
+                    <p class="text-gray-200 mb-4">
+                        Tecnologia proprietária que permite controlar a reprodução em qualquer dispositivo compatível usando qualquer app Spotify como controle remoto.
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-white">300+</div>
+                            <p class="text-sm text-gray-300">Marcas parceiras</p>
+                        </div>
+                        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-white">2000+</div>
+                            <p class="text-sm text-gray-300">Dispositivos compatíveis</p>
+                        </div>
+                        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-white">Seamless</div>
+                            <p class="text-sm text-gray-300">Transição entre dispositivos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SISTEMAS DE INFORMAÇÃO -->
+    <section id="sistemas" class="py-20 px-4 bg-gray-800">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">4</span>
+                Sistemas de Informação Propostos
+            </h2>
+            
+            <!-- Sistemas Principais -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Sistema de Streaming -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-play-circle mr-2"></i>
+                        Sistema de Streaming de Áudio
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-green-400">Função:</span>
+                            <p class="text-sm text-gray-300 mt-1">Entrega de conteúdo em tempo real com baixa latência</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-blue-400">Componentes:</span>
+                            <ul class="text-sm text-gray-300 mt-1">
+                                <li>• CDN global distribuída</li>
+                                <li>• Codificação adaptativa (Ogg Vorbis)</li>
+                                <li>• Cache inteligente</li>
+                                <li>• Buffer management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema de Recomendação -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-brain mr-2"></i>
+                        Sistema de Recomendação (IA/ML)
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-green-400">Função:</span>
+                            <p class="text-sm text-gray-300 mt-1">Personalização e descoberta de conteúdo</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-blue-400">Algoritmos:</span>
+                            <ul class="text-sm text-gray-300 mt-1">
+                                <li>• Collaborative Filtering</li>
+                                <li>• Content-Based Filtering</li>
+                                <li>• Deep Learning (RNN, CNN)</li>
+                                <li>• NLP para análise de contexto</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema de Pagamentos -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-credit-card mr-2"></i>
+                        Sistema de Pagamentos e Assinaturas
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-green-400">Função:</span>
+                            <p class="text-sm text-gray-300 mt-1">Gestão de cobranças e controle de acesso</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-blue-400">Recursos:</span>
+                            <ul class="text-sm text-gray-300 mt-1">
+                                <li>• Processamento multi-moeda</li>
+                                <li>• Gestão de trials e promoções</li>
+                                <li>• Integração com gateways globais</li>
+                                <li>• Sistema anti-fraude</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema de Analytics -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Sistema de Analytics e BI
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-green-400">Função:</span>
+                            <p class="text-sm text-gray-300 mt-1">Análise de dados e insights de negócio</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <span class="font-semibold text-blue-400">Capacidades:</span>
+                            <ul class="text-sm text-gray-300 mt-1">
+                                <li>• Real-time data processing</li>
+                                <li>• Dashboards para artistas</li>
+                                <li>• Análise comportamental</li>
+                                <li>• Previsão de tendências</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arquitetura de Microserviços -->
+            <div class="bg-gray-900 p-8 rounded-xl mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-green-500 text-center">
+                    <i class="fas fa-cubes mr-2"></i>
+                    Arquitetura de Microserviços
+                </h3>
+                
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">👤</div>
+                        <h4 class="font-semibold text-green-400">User Service</h4>
+                        <p class="text-xs text-gray-400">Autenticação e perfis</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">🎵</div>
+                        <h4 class="font-semibold text-green-400">Music Service</h4>
+                        <p class="text-xs text-gray-400">Catálogo e metadados</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">📋</div>
+                        <h4 class="font-semibold text-green-400">Playlist Service</h4>
+                        <p class="text-xs text-gray-400">Gestão de playlists</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">🔍</div>
+                        <h4 class="font-semibold text-green-400">Search Service</h4>
+                        <p class="text-xs text-gray-400">Busca e indexação</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">📊</div>
+                        <h4 class="font-semibold text-green-400">Analytics Service</h4>
+                        <p class="text-xs text-gray-400">Métricas e logs</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">💳</div>
+                        <h4 class="font-semibold text-green-400">Payment Service</h4>
+                        <p class="text-xs text-gray-400">Cobranças</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">📢</div>
+                        <h4 class="font-semibold text-green-400">Ad Service</h4>
+                        <p class="text-xs text-gray-400">Publicidade</p>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-2">🔐</div>
+                        <h4 class="font-semibold text-green-400">DRM Service</h4>
+                        <p class="text-xs text-gray-400">Proteção de conteúdo</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integração de Sistemas -->
+            <div class="bg-gray-900 p-8 rounded-xl">
+                <h3 class="text-xl font-bold mb-6 text-green-500">
+                    <i class="fas fa-network-wired mr-2"></i>
+                    Pipeline de Dados e Integração
+                </h3>
+                
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-sm">
+                        <span class="bg-blue-600 px-3 py-1 rounded-full">User Events</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-purple-600 px-3 py-1 rounded-full">Kafka</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-orange-600 px-3 py-1 rounded-full">Storm/Spark</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-red-600 px-3 py-1 rounded-full">Hadoop</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-green-600 px-3 py-1 rounded-full">BigQuery</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                        <span class="bg-yellow-600 px-3 py-1 rounded-full">ML Models</span>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-4 mt-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-500">4TB/dia</div>
+                            <p class="text-xs text-gray-400">Dados processados</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-500">10M/seg</div>
+                            <p class="text-xs text-gray-400">Requisições</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-500">1000+</div>
+                            <p class="text-xs text-gray-400">Microserviços</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. USUÁRIOS DO SISTEMA -->
+    <section id="usuarios" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">5</span>
+                Usuários do Sistema
+            </h2>
+            
+            <!-- Níveis de Usuários -->
+            <div class="grid lg:grid-cols-3 gap-8 mb-8">
+                <!-- Nível Operacional -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-cogs text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-blue-400">Nível Operacional</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-blue-300 mb-2">Usuários Finais</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Ouvintes Free e Premium</li>
+                                <li>• Criadores de playlists</li>
+                                <li>• Usuários de podcasts</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-blue-300 mb-2">Artistas/Creators</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Upload de conteúdo</li>
+                                <li>• Spotify for Artists</li>
+                                <li>• Análise básica de streams</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-blue-300 mb-2">Suporte Técnico</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Atendimento ao cliente</li>
+                                <li>• Resolução de problemas</li>
+                                <li>• Gestão de tickets</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-blue-300 mb-2">Benefícios</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>✓ Interface intuitiva</li>
+                                <li>✓ Acesso rápido a funcionalidades</li>
+                                <li>✓ Experiência personalizada</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nível Gerencial -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="bg-purple-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-bar text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-purple-400">Nível Gerencial</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-purple-300 mb-2">Product Managers</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Análise de métricas de produto</li>
+                                <li>• Gestão de features</li>
+                                <li>• A/B testing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-purple-300 mb-2">Marketing Managers</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Campanhas promocionais</li>
+                                <li>• Análise de conversão</li>
+                                <li>• Segmentação de usuários</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-purple-300 mb-2">Label Relations</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Gestão de contratos</li>
+                                <li>• Relatórios de royalties</li>
+                                <li>• Performance de catálogo</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-purple-300 mb-2">Benefícios</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>✓ Dashboards customizados</li>
+                                <li>✓ Relatórios detalhados</li>
+                                <li>✓ KPIs em tempo real</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nível Estratégico -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chess-king text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-green-400">Nível Estratégico</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-green-300 mb-2">C-Level Executives</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• CEO, CFO, CTO, CMO</li>
+                                <li>• Visão estratégica global</li>
+                                <li>• Decisões de investimento</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-green-300 mb-2">Board of Directors</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Governança corporativa</li>
+                                <li>• Aprovação de estratégias</li>
+                                <li>• Análise de resultados</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-green-300 mb-2">VP's & Directors</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Expansão de mercado</li>
+                                <li>• Parcerias estratégicas</li>
+                                <li>• Inovação tecnológica</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-3 rounded">
+                            <h4 class="font-semibold text-green-300 mb-2">Benefícios</h4>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>✓ Business Intelligence</li>
+                                <li>✓ Predictive Analytics</li>
+                                <li>✓ Market insights</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matriz de Acesso -->
+            <div class="bg-gray-800 p-8 rounded-xl mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-green-500 text-center">
+                    <i class="fas fa-key mr-2"></i>
+                    Matriz de Acesso aos Sistemas
+                </h3>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-700">
+                                <th class="p-3 text-left">Sistema/Funcionalidade</th>
+                                <th class="p-3 text-center">Operacional</th>
+                                <th class="p-3 text-center">Gerencial</th>
+                                <th class="p-3 text-center">Estratégico</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-300">
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">Streaming de Música</td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">Analytics Básico</td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">Dashboard Gerencial</td>
+                                <td class="p-3 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">BI & Predictive Analytics</td>
+                                <td class="p-3 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-minus text-yellow-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">Gestão de Contratos</td>
+                                <td class="p-3 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-3">Configuração de Sistemas</td>
+                                <td class="p-3 text-center"><i class="fas fa-minus text-yellow-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="p-3 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4 flex justify-center gap-4 text-sm">
+                    <span><i class="fas fa-check text-green-500 mr-1"></i> Acesso Total</span>
+                    <span><i class="fas fa-minus text-yellow-500 mr-1"></i> Acesso Parcial</span>
+                    <span><i class="fas fa-times text-red-500 mr-1"></i> Sem Acesso</span>
+                </div>
+            </div>
+
+            <!-- Justificativa e Benefícios -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        Justificativa do Sistema
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>Escalabilidade:</strong> Suportar milhões de usuários simultâneos globalmente
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>Personalização:</strong> Oferecer experiência única para cada usuário
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>Eficiência:</strong> Otimizar custos de infraestrutura e operação
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>Competitividade:</strong> Manter liderança no mercado de streaming
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-trophy mr-2"></i>
+                        Benefícios Alcançados
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>31% Market Share:</strong> Líder global em streaming de música
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>640M usuários:</strong> Base massiva e engajada
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>€13.2B receita:</strong> Crescimento sustentável
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <div>
+                                <strong>NPS alto:</strong> Satisfação e retenção de usuários
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO TECNOLOGIA (Mantida do original) -->
+    <section id="tech" class="py-20 px-4 bg-gray-800">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
+                <i class="fas fa-microchip text-green-500 mr-4"></i>
+                Detalhamento Tecnológico
+            </h2>
+
+            <!-- Stack Tecnológico -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Backend -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-server mr-2"></i>
+                        Backend
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i class="fab fa-java text-red-500 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Java</p>
+                                <p class="text-xs text-gray-400">Serviços principais</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-python text-blue-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Python</p>
+                                <p class="text-xs text-gray-400">Data science & Analytics</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-database text-green-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Cassandra</p>
+                                <p class="text-xs text-gray-400">Banco de dados distribuído</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frontend -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+<h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-laptop-code mr-2"></i>
+                        Frontend
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i class="fab fa-react text-cyan-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">React</p>
+                                <p class="text-xs text-gray-400">Web application</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-swift text-orange-500 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Swift</p>
+                                <p class="text-xs text-gray-400">iOS app</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-android text-green-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Kotlin</p>
+                                <p class="text-xs text-gray-400">Android app</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infrastructure -->
+                <div class="bg-gray-900 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-cloud mr-2"></i>
+                        Infraestrutura
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i class="fab fa-google text-blue-500 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Google Cloud</p>
+                                <p class="text-xs text-gray-400">Cloud computing</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-docker text-blue-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">Docker & Kubernetes</p>
+                                <p class="text-xs text-gray-400">Containerização</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-network-wired text-purple-400 text-2xl mr-3 tech-icon"></i>
+                            <div>
+                                <p class="font-semibold">CDN Global</p>
+                                <p class="text-xs text-gray-400">Content delivery</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Números da Infraestrutura -->
+            <div class="bg-gray-900 p-8 rounded-xl">
+                <h3 class="text-2xl font-bold mb-6 text-green-500 text-center">
+                    <i class="fas fa-globe-americas mr-2"></i>
+                    Escala da Operação
+                </h3>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <div class="text-3xl font-bold text-green-500 mb-2">4000+</div>
+                        <p class="text-sm text-gray-400">Servidores</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <div class="text-3xl font-bold text-green-500 mb-2">1000+</div>
+                        <p class="text-sm text-gray-400">Microserviços</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <div class="text-3xl font-bold text-green-500 mb-2">4TB</div>
+                        <p class="text-sm text-gray-400">Dados/dia</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <div class="text-3xl font-bold text-green-500 mb-2">10M+</div>
+                        <p class="text-sm text-gray-400">Req/segundo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusão -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8">
+                <i class="fas fa-flag-checkered text-green-500 mr-4"></i>
+                Conclusão da Análise
+            </h2>
+            
+            <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-xl">
+                <p class="text-lg text-gray-300 mb-6">
+                    O Spotify representa um caso exemplar de como sistemas de informação integrados podem revolucionar uma indústria inteira. 
+                    Através da combinação estratégica de tecnologia avançada, modelo de negócios inovador e foco na experiência do usuário, 
+                    a empresa conseguiu criar valor para todos os stakeholders do ecossistema musical.
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div>
+                        <i class="fas fa-rocket text-green-500 text-3xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Inovação Contínua</h4>
+                        <p class="text-sm text-gray-400">IA, ML e personalização avançada</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-users text-blue-500 text-3xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Foco no Usuário</h4>
+                        <p class="text-sm text-gray-400">UX intuitiva e recursos relevantes</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-chart-line text-purple-500 text-3xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Crescimento Sustentável</h4>
+                        <p class="text-sm text-gray-400">Expansão global e diversificação</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-gray-300">
+                        <i class="fas fa-quote-left text-green-500 mr-2"></i>
+                        Os sistemas de informação do Spotify demonstram como a tecnologia pode ser utilizada para criar experiências 
+                        excepcionais, otimizar operações em escala global e gerar insights valiosos para tomada de decisão em todos 
+                        os níveis organizacionais.
+                        <i class="fas fa-quote-right text-green-500 ml-2"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="spotify-black py-8 px-4 text-center">
+        <div class="container mx-auto">
+            <p class="text-gray-400 mb-4">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Análise desenvolvida para fins acadêmicos - Sistemas de Informação
+            </p>
+            <div class="flex justify-center space-x-4 text-gray-500">
+                <a href="https://spotify.com" target="_blank" class="hover:text-green-500">
+                    <i class="fab fa-spotify text-2xl"></i>
+                </a>
+                <a href="https://engineering.atspotify.com/" target="_blank" class="hover:text-green-500">
+                    <i class="fas fa-blog text-2xl"></i>
+                </a>
+                <a href="https://developer.spotify.com/" target="_blank" class="hover:text-green-500">
+                    <i class="fas fa-code text-2xl"></i>
+                </a>
+            </div>
+            <p class="text-sm text-gray-600 mt-4">
+                © 2024 - Material educacional sobre Sistemas de Informação do Spotify
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Smooth scroll animation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Counter Animation Function
+        function startCounterAnimation(element) {
+            const target = parseFloat(element.getAttribute('data-count-to'));
+            const suffix = element.getAttribute('data-count-suffix') || '';
+            const duration = parseInt(element.getAttribute('data-count-duration')) || 2000;
+            const startTime = performance.now();
+            const startValue = 0;
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function: ease-out cubic
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                const currentValue = startValue + (target - startValue) * easeOutCubic;
+
+                // Format number
+                let displayValue;
+                if (target >= 1) {
+                    displayValue = Math.floor(currentValue);
+                } else {
+                    displayValue = currentValue.toFixed(1);
+                }
+
+                element.textContent = displayValue + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    // Animation complete
+                    element.textContent = target + suffix;
+                    // Trigger particle effect
+                    createParticles(element);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Particle Effect Function
+        function createParticles(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const container = document.getElementById('particles-container');
+            const particleCount = 12;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                const angle = (360 / particleCount) * i;
+                const angleRad = angle * (Math.PI / 180);
+                const velocity = 50;
+
+                particle.style.position = 'fixed';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.background = 'linear-gradient(135deg, #1DB954, #1ed760)';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.boxShadow = '0 0 10px rgba(29, 185, 84, 0.8)';
+                particle.style.animation = 'particleFade 1s ease-out forwards';
+                particle.style.transform = `translate(${Math.cos(angleRad) * velocity}px, ${Math.sin(angleRad) * velocity}px)`;
+                particle.style.transition = 'transform 1s ease-out';
+
+                container.appendChild(particle);
+
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Enhanced Intersection Observer
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                root: null,
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const animateObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+
+                        // Determine animation based on element type
+                        if (element.tagName === 'H2' || element.tagName === 'H3') {
+                            element.classList.add('animate-slide-up');
+                        } else if (element.classList.contains('card-hover')) {
+                            // Alternate between left and right for cards
+                            const isEven = index % 2 === 0;
+                            element.classList.add(isEven ? 'animate-slide-left' : 'animate-slide-right');
+                        } else if (element.classList.contains('tech-icon')) {
+                            element.classList.add('animate-icon-pulse');
+                        } else if (element.classList.contains('counter-number')) {
+                            if (!prefersReducedMotion) {
+                                startCounterAnimation(element);
+                            }
+                        } else {
+                            element.classList.add('animate-fade-in');
+                        }
+
+                        // Remove from observation after animation
+                        animateObserver.unobserve(element);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all elements with animate-on-scroll class
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                animateObserver.observe(el);
+            });
+
+            // Also observe counter numbers
+            document.querySelectorAll('.counter-number').forEach(el => {
+                animateObserver.observe(el);
+            });
+        } else {
+            // Fallback for browsers without IntersectionObserver
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                el.classList.add('animate-fade-in');
+                el.style.opacity = '1';
+            });
+
+            // Start all counters immediately
+            document.querySelectorAll('.counter-number').forEach(el => {
+                const target = el.getAttribute('data-count-to');
+                const suffix = el.getAttribute('data-count-suffix') || '';
+                el.textContent = target + suffix;
+            });
+        }
+
+        // Handle counters that are visible on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.counter-number').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top >= 0 && rect.top <= window.innerHeight;
+
+                if (isVisible && !prefersReducedMotion) {
+                    startCounterAnimation(el);
+                }
+            });
+        });
+
+        // Add some interactivity to cards
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+
+    <!-- Particles Container -->
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-50"></div>
+</body>
+</html>
