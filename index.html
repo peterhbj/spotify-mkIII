@@ -8,6 +8,19 @@
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0d0d0d;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #0f0f0f;
+            --green-primary: #1DB954;
+            --green-secondary: #1ed760;
+            --shadow-dark: #080808;
+            --shadow-light: #1e1e1e;
+            --glow-subtle: rgba(29, 185, 84, 0.1);
+            --glow-medium: rgba(29, 185, 84, 0.2);
+            --glow-strong: rgba(29, 185, 84, 0.4);
+        }
+
         * {
             scroll-behavior: smooth;
         }
@@ -24,17 +37,105 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes iconPulse {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes particleFade {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.5);
+            }
+        }
+
         .gradient-text {
             background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .card-hover {
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            will-change: transform, box-shadow;
         }
         .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(29, 185, 84, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light), 0 8px 30px var(--glow-medium);
+            border: 1px solid var(--glow-strong);
         }
         .tech-icon {
             transition: all 0.3s;
@@ -43,11 +144,152 @@
             transform: scale(1.1);
             color: #1DB954;
         }
+
+        .navbar-glass {
+            background: rgba(17, 17, 17, 0.7) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(29, 185, 84, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @supports not (backdrop-filter: blur(10px)) {
+            .navbar-glass {
+                background: rgba(17, 17, 17, 0.95) !important;
+            }
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-secondary) 100%);
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+            border: none;
+            transition: all 0.3s ease;
+            will-change: transform;
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 185, 84, 0.5);
+        }
+        .btn-modern:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(29, 185, 84, 0.4);
+        }
+
+        .badge-modern {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+            box-shadow: 4px 4px 8px #0a0a0a, -4px -4px 8px #1a1a1a;
+            border: 1px solid var(--glow-medium);
+            transition: transform 0.2s ease;
+        }
+        .badge-modern:hover {
+            transform: scale(1.05);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+        }
+
+        /* Animation Utility Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+        .animate-slide-left {
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-slide-right {
+            animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-slide-up {
+            animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .animate-scale-in {
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .animate-icon-pulse {
+            animation: iconPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Stagger Delay Utilities */
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+        .delay-500 {
+            animation-delay: 0.5s;
+        }
+
+        /* Initial state for scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+        }
+
+        /* Responsive Adjustments for Mobile */
+        @media (max-width: 768px) {
+            @keyframes slideInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .card-hover:hover {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* Accessibility - Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .card-hover:hover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
     <!-- Header/Navigation -->
-    <nav class="fixed top-0 w-full spotify-black z-50 shadow-lg">
+    <nav class="navbar-glass fixed top-0 w-full z-50">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
@@ -86,8 +328,8 @@
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-4">
         <div class="container mx-auto text-center fade-in">
-            <i class="fab fa-spotify text-green-500 text-8xl mb-8"></i>
-            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+            <i class="fab fa-spotify text-green-500 text-8xl mb-8 animate-scale-in"></i>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-slide-up delay-100">
                 <span class="gradient-text">Spotify</span>
             </h1>
             <h2 class="text-3xl md:text-4xl mb-6">
@@ -97,20 +339,20 @@
                 Estudo completo sobre o modelo de negócios, sistemas de informação e arquitetura tecnológica do maior serviço de streaming de música do mundo
             </p>
             <div class="flex flex-wrap gap-4 justify-center mb-12">
-                <div class="bg-gray-800 px-6 py-3 rounded-full">
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-200">
                     <i class="fas fa-users text-green-500 mr-2"></i>
-                    640M+ usuários
+                    <span class="counter-number" data-count-to="640" data-count-suffix="M+">640M+</span> usuários
                 </div>
-                <div class="bg-gray-800 px-6 py-3 rounded-full">
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-300">
                     <i class="fas fa-music text-green-500 mr-2"></i>
-                    100M+ músicas
+                    <span class="counter-number" data-count-to="100" data-count-suffix="M+">100M+</span> músicas
                 </div>
-                <div class="bg-gray-800 px-6 py-3 rounded-full">
+                <div class="badge-modern px-6 py-3 rounded-full animate-scale-in delay-400">
                     <i class="fas fa-globe text-green-500 mr-2"></i>
-                    184 países
+                    <span class="counter-number" data-count-to="184" data-count-suffix="">184</span> países
                 </div>
             </div>
-            <a href="#descricao" class="inline-block bg-green-500 text-black px-8 py-4 rounded-full font-bold hover:bg-green-400 transition transform hover:scale-105">
+            <a href="#descricao" class="btn-modern inline-block text-black px-8 py-4 rounded-full font-bold animate-slide-up delay-500">
                 Iniciar Análise <i class="fas fa-arrow-down ml-2"></i>
             </a>
         </div>
@@ -119,15 +361,15 @@
     <!-- 1. DESCRIÇÃO DO NEGÓCIO -->
     <section id="descricao" class="py-20 px-4">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">1</span>
                 Descrição do Negócio
             </h2>
             
             <div class="max-w-4xl mx-auto">
-                <div class="bg-gray-800 p-8 rounded-xl mb-8">
+                <div class="card-hover bg-gray-800 p-8 rounded-xl mb-8 animate-on-scroll">
                     <h3 class="text-2xl font-bold mb-6 text-green-500">
-                        <i class="fas fa-building mr-2"></i>
+                        <i class="fas fa-building mr-2 tech-icon animate-on-scroll"></i>
                         O Que é o Spotify?
                     </h3>
                     <p class="text-lg text-gray-300 mb-6">
@@ -159,9 +401,9 @@
                 </div>
 
                 <!-- Core Business -->
-                <div class="bg-gray-800 p-8 rounded-xl">
+                <div class="card-hover bg-gray-800 p-8 rounded-xl animate-on-scroll">
                     <h3 class="text-2xl font-bold mb-6 text-green-500">
-                        <i class="fas fa-cogs mr-2"></i>
+                        <i class="fas fa-cogs mr-2 tech-icon animate-on-scroll"></i>
                         Modelo de Negócio Principal
                     </h3>
                     
@@ -199,7 +441,7 @@
                                     <p class="text-sm">Personalização por IA</p>
                                 </div>
                                 <div>
-                                    <i class="fas fa-devices text-3xl text-green-500 mb-2"></i>
+<i class="fas fa-devices text-3xl text-green-500 mb-2"></i>
                                     <p class="text-sm">Multi-plataforma</p>
                                 </div>
                             </div>
@@ -213,7 +455,7 @@
     <!-- 2. FORNECEDORES E CLIENTES -->
     <section id="fornecedores" class="py-20 px-4 bg-gray-800">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">2</span>
                 Fornecedores e Clientes
             </h2>
@@ -374,7 +616,7 @@
     <!-- 3. CANAIS DE DISTRIBUIÇÃO -->
     <section id="canais" class="py-20 px-4">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">3</span>
                 Canais de Distribuição
             </h2>
@@ -509,7 +751,7 @@
     <!-- 4. SISTEMAS DE INFORMAÇÃO -->
     <section id="sistemas" class="py-20 px-4 bg-gray-800">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">4</span>
                 Sistemas de Informação Propostos
             </h2>
@@ -711,7 +953,7 @@
     <!-- 5. USUÁRIOS DO SISTEMA -->
     <section id="usuarios" class="py-20 px-4">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <span class="bg-green-500 text-black px-4 py-2 rounded-full mr-4">5</span>
                 Usuários do Sistema
             </h2>
@@ -1002,7 +1244,7 @@
     <!-- SEÇÃO TECNOLOGIA (Mantida do original) -->
     <section id="tech" class="py-20 px-4 bg-gray-800">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 animate-on-scroll">
                 <i class="fas fa-microchip text-green-500 mr-4"></i>
                 Detalhamento Tecnológico
             </h2>
@@ -1042,7 +1284,7 @@
 
                 <!-- Frontend -->
                 <div class="bg-gray-900 p-6 rounded-xl">
-                    <h3 class="text-xl font-bold mb-4 text-green-500">
+<h3 class="text-xl font-bold mb-4 text-green-500">
                         <i class="fas fa-laptop-code mr-2"></i>
                         Frontend
                     </h3>
@@ -1232,23 +1474,155 @@
             });
         });
 
-        // Add animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+        // Counter Animation Function
+        function startCounterAnimation(element) {
+            const target = parseFloat(element.getAttribute('data-count-to'));
+            const suffix = element.getAttribute('data-count-suffix') || '';
+            const duration = parseInt(element.getAttribute('data-count-duration')) || 2000;
+            const startTime = performance.now();
+            const startValue = 0;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function: ease-out cubic
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                const currentValue = startValue + (target - startValue) * easeOutCubic;
+
+                // Format number
+                let displayValue;
+                if (target >= 1) {
+                    displayValue = Math.floor(currentValue);
+                } else {
+                    displayValue = currentValue.toFixed(1);
+                }
+
+                element.textContent = displayValue + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    // Animation complete
+                    element.textContent = target + suffix;
+                    // Trigger particle effect
+                    createParticles(element);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Particle Effect Function
+        function createParticles(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const container = document.getElementById('particles-container');
+            const particleCount = 12;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                const angle = (360 / particleCount) * i;
+                const angleRad = angle * (Math.PI / 180);
+                const velocity = 50;
+
+                particle.style.position = 'fixed';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.background = 'linear-gradient(135deg, #1DB954, #1ed760)';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.boxShadow = '0 0 10px rgba(29, 185, 84, 0.8)';
+                particle.style.animation = 'particleFade 1s ease-out forwards';
+                particle.style.transform = `translate(${Math.cos(angleRad) * velocity}px, ${Math.sin(angleRad) * velocity}px)`;
+                particle.style.transition = 'transform 1s ease-out';
+
+                container.appendChild(particle);
+
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Enhanced Intersection Observer
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                root: null,
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const animateObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+
+                        // Determine animation based on element type
+                        if (element.tagName === 'H2' || element.tagName === 'H3') {
+                            element.classList.add('animate-slide-up');
+                        } else if (element.classList.contains('card-hover')) {
+                            // Alternate between left and right for cards
+                            const isEven = index % 2 === 0;
+                            element.classList.add(isEven ? 'animate-slide-left' : 'animate-slide-right');
+                        } else if (element.classList.contains('tech-icon')) {
+                            element.classList.add('animate-icon-pulse');
+                        } else if (element.classList.contains('counter-number')) {
+                            if (!prefersReducedMotion) {
+                                startCounterAnimation(element);
+                            }
+                        } else {
+                            element.classList.add('animate-fade-in');
+                        }
+
+                        // Remove from observation after animation
+                        animateObserver.unobserve(element);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all elements with animate-on-scroll class
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                animateObserver.observe(el);
+            });
+
+            // Also observe counter numbers
+            document.querySelectorAll('.counter-number').forEach(el => {
+                animateObserver.observe(el);
+            });
+        } else {
+            // Fallback for browsers without IntersectionObserver
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                el.classList.add('animate-fade-in');
+                el.style.opacity = '1';
+            });
+
+            // Start all counters immediately
+            document.querySelectorAll('.counter-number').forEach(el => {
+                const target = el.getAttribute('data-count-to');
+                const suffix = el.getAttribute('data-count-suffix') || '';
+                el.textContent = target + suffix;
+            });
+        }
+
+        // Handle counters that are visible on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.counter-number').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top >= 0 && rect.top <= window.innerHeight;
+
+                if (isVisible && !prefersReducedMotion) {
+                    startCounterAnimation(el);
                 }
             });
-        }, observerOptions);
-
-        // Observe all sections
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
         });
 
         // Add some interactivity to cards
@@ -1262,5 +1636,8 @@
             });
         });
     </script>
+
+    <!-- Particles Container -->
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-50"></div>
 </body>
 </html>
